@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { API_URL, API_KEY } from '../../config'
+import { POPULAR_BASE_URL } from '../../config'
 
 export const useHomeFetch = () => {
         //using react hooks to keep track of states
@@ -52,7 +52,7 @@ export const useHomeFetch = () => {
     //using useEffect to call the "fetchmovies" function. UseEffect is more or less Componentdidmount
     //the empty array means it only runs the function once after the component has mounted
         useEffect(() => {
-            fetchMovies(`${API_URL}movie/popular?api_key=${API_KEY}`)
+            fetchMovies(`${POPULAR_BASE_URL}`)
         }, [])
     
     //returninng all three initial states so they can be imported and used by a component. 

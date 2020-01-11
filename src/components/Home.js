@@ -1,12 +1,11 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import {
-    API_URL,
-    API_KEY,
-    // API_BASE_URL,
     POSTER_SIZE,
     BACKDROP_SIZE,
-    IMAGE_BASE_URL
+    IMAGE_BASE_URL,
+    POPULAR_BASE_URL,
+    SEARCH_BASE_URL
 } from '../config'
 //importing all components
 
@@ -30,7 +29,7 @@ const Home = () => {
     // call hooks and get the state which contains the api data, the erro which contains the error being returned from the api call and a loading status to check wether the api call was completed or not
     const [ 
         { state:
-            [movies, currentPage, totalPages, heroimage]
+            { movies, currentPage, totalPages, heroimage }
                         
             ,
             loading,
@@ -47,10 +46,18 @@ const Home = () => {
     
     //check if there is no data in the first index of the movie array. if there is no data return a spinner
     if (!movies[0]) return <Spinner />
+
     
+    const searchMovies = search => {
+        const endpoint = search ? `${SEARCH_BASE_URL}${search}` : `${POPULAR_BASE_URL}`
+        setSearchTerm(search);
+        fetchMovies(endpoint)
+    }   
+
+
     const loadMoreMovies = () => {
-        const searchEndpoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${searchTerm}&page=${currentPage + 1}`
-        const popularEndpoint = `${API_URL}movie/popular?api_key=${API_KEY}&page=${currentPage + 1}`
+        const searchEndpoint = `${SEARCH_BASE_URL}${searchTerm}&page=${currentPage + 1}`
+        const popularEndpoint = `${POPULAR_BASE_URL}&page=${currentPage + 1}`
 
         const endpoint = searchTerm ? searchEndpoint : popularEndpoint;
     
@@ -60,12 +67,14 @@ const Home = () => {
     return <>
         
         {/* //passing the following props to the heroimage component/image */}
-        <Heroimage image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${heroimage.backdrop_path}`}
         
-            title={heroimage.original_title} text={heroimage.overview} />
+        {/* if there is a seach term, return nothing. Else return the home image */}
+        {!searchTerm && <Heroimage image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${heroimage.backdrop_path}`}
+        
+            title={heroimage.original_title} text={heroimage.overview} />}
         
 
-        <SearchBar />
+        <SearchBar callback={searchMovies}/>
 
         <Grid header={searchTerm ? 'Search Result' : 'Popular Movies'}>
             
@@ -85,9 +94,13 @@ const Home = () => {
          </Grid>
         
         {loading && <Spinner />}
-
-        <LoadMoreBtn text="Load More"  />
-    </>  
+        
+        {/* //check if there is no more to show and hide the button */}
+        {currentPage < totalPages && !loading && (
+       
+            <LoadMoreBtn text="Load More" callback={loadMoreMovies} />
+        )}
+        </>  
 
 }
 
