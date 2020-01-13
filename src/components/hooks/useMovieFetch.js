@@ -14,7 +14,7 @@ export const useMovieFetch = movieId => {
         setLoading(true);
         
         try {
-            const endpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}`g
+            const endpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}`
             console.log(endpoint)
             const result = await(await fetch(endpoint)).json()
             console.log(result)
@@ -48,7 +48,7 @@ export const useMovieFetch = movieId => {
         }else{
             fetchData()
             }
-    }, [fetchData])
+    }, [movieId, fetchData])
 
     useEffect(() => {
         localStorage.setItem(movieId, JSON.stringify(state))
