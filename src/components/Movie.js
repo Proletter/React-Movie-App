@@ -12,7 +12,7 @@ import { useMovieFetch } from './hooks/useMovieFetch'
 
 
 
-const Movie = (movieId) => {
+const Movie = ({ movieId } ) => {
 
    const [movie, loading, error] = useMovieFetch(movieId)
     //same as useMovieFetch hook "state"
@@ -20,11 +20,15 @@ const Movie = (movieId) => {
     if (error) return <div>Something went wrong</div>
     if(loading) return <Spinner />
     return (<>
-        <Navigation/>
-        <Movieinfo />
-        <Movieinfobutton />
-        <Grid>
-            <Actor/>
+        <Navigation movie={movie.original_title}/>
+        <Movieinfo movie={movie}/>
+        <Movieinfobutton time={movie.runtime} budget={movie.budget} revenue={movie.revenue} />
+        {/* //Mapping through the actors and passing it into the actor's grid as a prop */}
+        <Grid header="Actors">
+            {movie.actors.map(actor => (
+                <Actor key={actor.credit_id}
+                actor={actor} />))}
+            
         </Grid>
         <Spinner/>
     

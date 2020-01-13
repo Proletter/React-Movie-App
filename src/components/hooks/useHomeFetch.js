@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { POPULAR_BASE_URL } from '../../config'
 
-export const useHomeFetch = () => {
+export const useHomeFetch = (searchTerm) => {
         //using react hooks to keep track of states
         const [state, setState] = useState({
            //thr initial state is "movies" with an empty array"
@@ -51,9 +51,23 @@ export const useHomeFetch = () => {
     
     //using useEffect to call the "fetchmovies" function. UseEffect is more or less Componentdidmount
     //the empty array means it only runs the function once after the component has mounted
-        useEffect(() => {
+    useEffect(() => {
+        if (sessionStorage.homeState) {
+            setState(JSON.parse(sessionStorage.homeState))
+            setLoading(false)
+            }else{
             fetchMovies(`${POPULAR_BASE_URL}`)
+            }
         }, [])
+    
+    useEffect(() => {
+        if (!searchTerm) {
+
+            sessionStorage.setItem('homeState', JSON.stringify(state))
+         
+     }
+        
+    },[searchTerm, state])
     
     //returninng all three initial states so they can be imported and used by a component. 
     return [{state, loading, error}, fetchMovies]

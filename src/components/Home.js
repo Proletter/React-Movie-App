@@ -27,6 +27,7 @@ import NoImage from './images/no_image.jpg'
 
 const Home = () => {
     // call hooks and get the state which contains the api data, the erro which contains the error being returned from the api call and a loading status to check wether the api call was completed or not
+    const [searchTerm, setSearchTerm] = useState('')
     const [ 
         { state:
             { movies, currentPage, totalPages, heroimage }
@@ -37,10 +38,10 @@ const Home = () => {
         
         , fetchMovies
     
-        ] = useHomeFetch()
+        ] = useHomeFetch(searchTerm)
     console.log(movies)
     
-    const [searchTerm, setSearchTerm] = useState('')
+   
     //check if there is an error in the api call. If there is an error return the following div
     if (error) return <div>Something went wrong please refresh page</div>
     
