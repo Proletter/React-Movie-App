@@ -16,11 +16,11 @@ steps:
 - task: Npm@1
   inputs:
     command: 'install'
-    workingDir: '/'
+    workingDir: './'
 - task: Npm@1
   inputs:
     command: 'custom'
-    workingDir: '/'
+    workingDir: './'
     customCommand: 'run build'
 - task: ArchiveFiles@2
   inputs:
